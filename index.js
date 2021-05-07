@@ -11,7 +11,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,14 +22,13 @@ const Role = db.role;
 
 // db.sequelize.sync();
 // force: true will drop the table if it already exists
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Database with { force: true }');
+db.sequelize.sync({force: false}).then(() => {
   initial();
 });
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Welcome to tivity application." });
 });
 
 // routes
@@ -43,18 +42,27 @@ app.listen(PORT, () => {
 });
 
 function initial() {
-  Role.create({
+  Role.findOrCreate({where:{
     id: 1,
     name: "user"
-  });
- 
-  Role.create({
+  },default:{
+    id: 1,
+    name: "user"
+  }});
+
+  Role.findOrCreate({where:{
     id: 2,
     name: "moderator"
-  });
- 
-  Role.create({
+  },default:{
+    id: 2,
+    name: "moderator"
+  }});
+
+  Role.findOrCreate({where:{
     id: 3,
     name: "admin"
-  });
+  },default:{
+    id: 3,
+    name: "admin"
+  }});
 }

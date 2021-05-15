@@ -18,12 +18,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // database
 const db = require("./app/models");
-const Role = db.role;
 
 // db.sequelize.sync();
 // force: true will drop the table if it already exists
 db.sequelize.sync({force: false}).then(() => {
-  initial();
 });
 
 // simple route
@@ -40,29 +38,3 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
-function initial() {
-  Role.findOrCreate({where:{
-    id: 1,
-    name: "user"
-  },default:{
-    id: 1,
-    name: "user"
-  }});
-
-  Role.findOrCreate({where:{
-    id: 2,
-    name: "moderator"
-  },default:{
-    id: 2,
-    name: "moderator"
-  }});
-
-  Role.findOrCreate({where:{
-    id: 3,
-    name: "admin"
-  },default:{
-    id: 3,
-    name: "admin"
-  }});
-}

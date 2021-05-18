@@ -1,28 +1,38 @@
 const db = require("../models");
 const { v4: uuidv4 } = require("uuid");
 const sequelize = require("sequelize");
+const config = require("../config/auth.config");
+const jwt = require("jsonwebtoken");
 
-exports.userBoard = (req, res) => {
-  res.status(200).send("User Content.");
-};
+function checkAccessToken(token) {
+  try {
+    return jwt.verify(token, config.secret);
+  } catch (err) {
+    return false;
+  }
+}
 
 exports.getUser = (req, res) => {
-  db.user
-    .findOne({ where: { id: req.body.userId } })
-    .then((user) => {
-      res.status(200).send(user);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({ message: err.message });
-    });
+  const decToken = checkAccessToken(req.headers["x-access-token"]);
+  if (decToken) {
+    db.user
+      .findOne({ where: { id: decToken.id} })
+      .then((user) => {
+        res.status(200).send(user);
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  } else {
+    res.status(500).send({ message: "Something went wrong" });
+  }
 };
 
 exports.getUserMakers = (req, res) => {
   db.marker
-    .findAll({ where: { userId: req.body.userId } })
+    .findAll({ where: { userId: req.query.userId } })
     .then((markers) => {
-      res.status(200).send(marker);
+      res.status(200).send(markers);
     })
     .catch((err) => {
       console.log(err);
@@ -31,19 +41,19 @@ exports.getUserMakers = (req, res) => {
 };
 
 exports.createMarker = (req, res) => {
+  const marker = {
+    id: uuidv4(),
+    posLat: req.body.posLat,
+    posLon: req.body.posLon,
+    posts: [],
+    userId: req.body.userId,
+  }
   db.marker
-    .create({
-      id: uuidv4(),
-      posLat: req.body.posLat,
-      posLon: req.body.posLon,
-      posts: [],
-      userId: req.body.userId,
-    })
+    .create(marker)
     .then(() => {
-      res.status(200).send({ message: "Marker added successfully!" });
+      res.status(200).send(marker);
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).send({ message: err.message });
     });
 };
@@ -57,7 +67,7 @@ exports.removeMarker = (req, res) => {
       marker
         .destroy()
         .then(() => {
-          res.status(200).send({ message: "Marker removed successfully!" });
+          res.status(200);
         })
         .catch((err) => {
           console.log(err);

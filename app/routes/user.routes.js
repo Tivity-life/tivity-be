@@ -10,10 +10,9 @@ module.exports = function (app) {
     next();
   });
 
-  app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
-
   app.get("/api/user/getUser", controller.getUser);
   app.get("/api/user/getMarkers", controller.getUserMakers);
+  app.post("/api/user/createMarker",controller.createMarker)
   app.post("/api/user/removeMarker", controller.removeMarker);
   app.post("/api/user/deletePost", controller.deletePost);
   app.post("/api/user/addPost", controller.addPost);

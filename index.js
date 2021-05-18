@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:8081",
 };
 
 app.use(cors(corsOptions));
@@ -21,8 +21,14 @@ const db = require("./app/models");
 
 // db.sequelize.sync();
 // force: true will drop the table if it already exists
-db.sequelize.sync({force: false}).then(() => {
-});
+
+db.sequelize
+  .authenticate()
+  .then(() => {
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 // simple route
 app.get("/", (req, res) => {
@@ -30,8 +36,8 @@ app.get("/", (req, res) => {
 });
 
 // routes
-require('./app/routes/auth.routes')(app);
-require('./app/routes/user.routes')(app);
+require("./app/routes/auth.routes")(app);
+require("./app/routes/user.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

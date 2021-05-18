@@ -1,7 +1,8 @@
 const config = require("../config/db.config.js");
-
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(
+
+const db = {};
+ const sequelize = new Sequelize(
   config.DB,
   config.USER,
   config.PASSWORD,
@@ -18,8 +19,6 @@ const sequelize = new Sequelize(
     }
   }
 );
-
-const db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;

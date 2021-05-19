@@ -6,19 +6,15 @@ module.exports = (sequelize, Sequelize) => {
       },
       name: {
         type: Sequelize.STRING,
-        primaryKey: true,
       },
       target: {
         type: Sequelize.STRING,
-        primaryKey: true,
       },
       startTime: {
         type: Sequelize.STRING,
-        primaryKey: true,
       },
       endTime: {
         type: Sequelize.STRING,
-        primaryKey: true,
       },
     });
   

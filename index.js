@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // database
 const db = require("./app/models");
 
-// db.sequelize.sync({force: false});
+db.sequelize.sync({force: false});
 
 db.sequelize
   .authenticate()

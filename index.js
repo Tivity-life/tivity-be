@@ -15,14 +15,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // database
 const db = require("./app/models");
 
-// db.sequelize.sync();map
-// force: true will drop the table if it already exists
-db.sequelize.sync({force: false}).then(() => {
+// db.sequelize.sync({force: false});
+
+db.sequelize
+  .authenticate()
+  .then(() => {
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to tivity application." });
 });
 
 // routes
-require('./app/routes/auth.routes')(app);
-require('./app/routes/user.routes')(app);
+require("./app/routes/auth.routes")(app);
+require("./app/routes/user.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

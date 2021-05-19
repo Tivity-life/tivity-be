@@ -8,12 +8,15 @@ function checkAccessToken(token) {
   try {
     return jwt.verify(token, config.secret);
   } catch (err) {
+    console.log("checkAccessToken", err);
+    console.log("checkAccessToken", token, config.secret);
     return false;
   }
 }
 
 exports.getUser = (req, res) => {
   const decToken = checkAccessToken(req.headers["x-access-token"]);
+  console.log(decToken);
   if (decToken) {
     db.user
       .findOne({ where: { id: decToken.id} })
@@ -21,6 +24,7 @@ exports.getUser = (req, res) => {
         res.status(200).send(user);
       })
       .catch((err) => {
+        console.log("checkAccessToken", err);
         res.status(500).send({ message: err.message });
       });
   } else {
@@ -118,6 +122,49 @@ exports.deletePost = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+      res.status(500).send({ message: err.message });
+    });
+};
+
+
+exports.getEvents = (req, res) => {
+      console.log("uerid;", req.query.userId);
+
+  db.event
+    .findAll({ where: { userId: req.query.userId } })
+    .then(events => {
+      res.status(200).send(events);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.createEvent = (req, res) => {
+  const event = {
+    id: uuidv4(),
+    name: req.body.name,
+    target: req.body.target,
+    startTime:
+      req.body.startTime > req.body.endTime
+        ? req.body.endTime
+        : req.body.startTime,
+    endTime:
+      req.body.startTime > req.body.endTime
+        ? req.body.startTime
+        : req.body.endTime,
+    userId: req.body.userId,
+  };
+
+  console.log(req.body)
+
+  db.event
+    .create(event)
+    .then(() => {
+      res.status(200).send(event);
+    })
+    .catch(err => {
       res.status(500).send({ message: err.message });
     });
 };

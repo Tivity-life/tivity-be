@@ -16,4 +16,7 @@ module.exports = function (app) {
   app.post("/api/user/removeMarker", controller.removeMarker);
   app.post("/api/user/deletePost", controller.deletePost);
   app.post("/api/user/addPost", controller.addPost);
+
+  app.get("/api/user/getEvents", controller.getEvents);
+  app.post("/api/user/createEvent", controller.createEvent);
 };

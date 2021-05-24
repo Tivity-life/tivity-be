@@ -189,7 +189,6 @@ exports.getTodos = (req, res) => {
 };
 
 exports.createTodo = (req, res) => {
-  console.log("body", req.body);
   const todo = {
     id: uuidv4(),
     label: req.body.label,
@@ -225,17 +224,94 @@ exports.updateTodo = (req, res) => {
 };
 
 exports.deleteTodo = (req, res) => {
-  const todo = {
-    label: req.body.label,
-    done: req.body.done,
-  };
-
   db.todo
     .destroy({
       where: { id: req.body.todoId },
     })
     .then(() => {
-      res.status(200).send(todo);
+      res.sendStatus(200);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send({ message: err.message });
+    });
+};
+
+
+exports.getHabits = (req, res) => {
+  db.habit
+    .findAll({
+      where: { userId: req.query.userId },
+      order: [["createdAt", "ASC"]],
+    })
+    .then(habits => {
+      res.status(200).send(habits);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.createHabit = (req, res) => {
+  const habit = {
+    id: uuidv4(),
+    insert: "",
+    isActiveMonday: false,
+    isActiveTuesday: false,
+    isActiveWednesday: false,
+    isActiveThursday: false,
+    isActiveFriday: false,
+    isActiveSaturday: false,
+    isActiveSunday: false,
+    n: 0,
+    userId: req.body.userId
+  };
+
+  db.habit
+    .create(habit)
+    .then(() => {
+      res.status(200).send(habit);
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.updateHabit = (req, res) => {
+  const habit = {
+    id: req.body.id,
+    insert: req.body.insert,
+    isActiveMonday: req.body.isActiveMonday,
+    isActiveTuesday: req.body.isActiveTuesday,
+    isActiveWednesday: req.body.isActiveWednesday,
+    isActiveThursday: req.body.isActiveThursday,
+    isActiveFriday: req.body.isActiveFriday,
+    isActiveSaturday: req.body.isActiveSaturday,
+    isActiveSunday: req.body.isActiveSunday,
+    n: req.body.n,
+    userId: req.body.userId,
+  };
+
+  db.habit
+    .update(habit, { where: { id: req.body.id } })
+    .then(() => {
+      res.status(200).send(habit);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.deleteHabit = (req, res) => {
+  db.habit
+    .destroy({
+      where: { id: req.body.id },
+    })
+    .then(() => {
+      res.sendStatus(200);
     })
     .catch(err => {
       console.log(err);

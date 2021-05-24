@@ -28,9 +28,11 @@ db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.marker = require("../models/marker.model.js")(sequelize, Sequelize);
 db.event = require("../models/event.model.js")(sequelize, Sequelize);
 db.todo = require("../models/todo.model.js")(sequelize, Sequelize);
+db.habit = require("../models/habit.model.js")(sequelize, Sequelize);
 
 db.marker.belongsTo(db.user);
 db.event.belongsTo(db.user);
 db.todo.belongsTo(db.user);
+db.habit.belongsTo(db.user);
 
 module.exports = db;

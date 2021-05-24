@@ -24,4 +24,9 @@ module.exports = function (app) {
   app.post("/api/user/createTodo", controller.createTodo);
   app.post("/api/user/updateTodo", controller.updateTodo);
   app.post("/api/user/removeTodo", controller.deleteTodo);
+
+  app.get("/api/user/getHabits", controller.getHabits);
+  app.post("/api/user/createHabit", controller.createHabit);
+  app.post("/api/user/updateHabit", controller.updateHabit);
+  app.post("/api/user/removeHabit", controller.deleteHabit);
 };
